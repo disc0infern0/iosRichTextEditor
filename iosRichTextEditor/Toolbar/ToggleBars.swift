@@ -84,6 +84,9 @@ extension ToggleBars {
     }
 
     /// App Actions
+
+    /// perform a toggle of the specificed togglebutton. Note that we do not update the state dictionary here.
+    /// that is done automatically based on the selection change.
     func runAction(for toggle: ToolbarToggle) {
         text.transformAttributes(in: &selection) { container in
             switch toggle {
@@ -107,6 +110,7 @@ extension ToggleBars {
         }
     }
 
+    /// Update the Toggle States dictionary based on the attributes in the current selection. (whether a range or an insertion point)
     func updateToggleStates() {
         let attributes = selection.attributes(in: text)
         for toggle in ToolbarToggle.allCases {
