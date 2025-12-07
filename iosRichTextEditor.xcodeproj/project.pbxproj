@@ -6,13 +6,8 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		49C83F4B2EE5A86500B6A83F /* AGENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = 49C83F4A2EE5A86500B6A83F /* AGENTS.md */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		49C83F182EE4668200B6A83F /* iosRichTextEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosRichTextEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		49C83F4A2EE5A86500B6A83F /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENTS.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -37,7 +32,6 @@
 		49C83F0F2EE4668200B6A83F = {
 			isa = PBXGroup;
 			children = (
-				49C83F4A2EE5A86500B6A83F /* AGENTS.md */,
 				49C83F1A2EE4668200B6A83F /* iosRichTextEditor */,
 				49C83F192EE4668200B6A83F /* Products */,
 			);
@@ -115,7 +109,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49C83F4B2EE5A86500B6A83F /* AGENTS.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
