@@ -24,23 +24,15 @@ struct Toolbars: ViewModifier {
         /// Keyboard, Bold/Italic/Underline/StrikeThrough, Color Buttons
             .toolbar() {
                 ToolbarItemGroup(placement: toolbarPlacement ) {
-                    Group {
-                        Button("Keyb", systemImage: "keyboard") {
-                            isTextFieldFocused.toggle()
-                        }
-                        Spacer()
-                        ForEach (ToolbarToggle.basic) { toggle in
-                            ShowToggleButton(toggle)
-                        }
-                        Spacer()
-                        ColorPickerIcon()
+                    Button("Keyb", systemImage: "keyboard") {
+                        isTextFieldFocused.toggle()
                     }
-                    .task(id: selection) {
-                        /// Update toggles to match typing attributes at the insertion point
-                        if selection.isInsertionPoint(in: text) {
-                            updateToggleStates()
-                        }
+                    Spacer()
+                    ForEach (ToolbarToggle.basic) { toggle in
+                        ShowToggleButton(toggle)
                     }
+                    Spacer()
+                    ColorPickerIcon()
                 }
             }
         /// Customizable toolbars in the secondary Action placement
@@ -49,6 +41,12 @@ struct Toolbars: ViewModifier {
             .toolbar(id: "reset", content: resetFormatting)
             .toolbarRole(.editor)
             .withColorPicker(for: $text, selection: $selection)
+            .task(id: selection) {
+                /// Update toggles to match typing attributes at the insertion point
+                if selection.isInsertionPoint(in: text) {
+                    updateToggleStates()
+                }
+            }
     }
 
     func resetFormatting() -> some CustomizableToolbarContent {
