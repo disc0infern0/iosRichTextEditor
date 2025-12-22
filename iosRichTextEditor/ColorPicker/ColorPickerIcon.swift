@@ -53,7 +53,8 @@ struct ColorPickerIcon: View  {
                     .animation(.linear(duration: ColourPickerStyle.rainbowAnimationDuration)
                         .repeatForever(autoreverses: false), value: rotation)
                     .task {
-                        if !reduceMotion { rotation = 360 }
+                        if reduceMotion { return }
+                        rotation = 360
                     }
             )
             .onTapGesture {

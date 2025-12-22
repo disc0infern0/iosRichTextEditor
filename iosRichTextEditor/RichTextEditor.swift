@@ -12,16 +12,15 @@ struct RichTextEditor: View {
     @State private var selection = AttributedTextSelection()
     @State private var lastInsertionPoint: AttributedString.Index = AttributedString("").startIndex
 
-
     var body: some View {
         NavigationStack {
             TextEditor( text: $text , selection: $selection )
-                .padding()
-                .scrollBounceBehavior(.basedOnSize)
-                .navigationTitle("ioS Editor")
                 .toolbars(for: $text, with: $selection)
+                .navigationTitle("ioS Editor")
+                .toolbarTitleDisplayMode(.inline)
+                .scrollBounceBehavior(.basedOnSize)
         }
-        .onAppear {
+        .task {
             // Move the insertion point to the start of the text (or, the last saved point if restored)
             self.selection = AttributedTextSelection(insertionPoint: lastInsertionPoint)
         }

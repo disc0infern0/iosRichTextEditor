@@ -13,17 +13,15 @@ struct Toolbars: ViewModifier {
 
     @State var toggleStates: [ToolbarToggle: Bool] = .init(uniqueKeysWithValues: ToolbarToggle.allCases.map{ ($0, false)})
     @Environment(\.fontResolutionContext) var context
-    @State private var paddingHeight: CGFloat = 0
-    
-    var toolbarPlacement: ToolbarItemPlacement { isTextFieldFocused ? .keyboard : .bottomBar }
+
+//    var toolbarPlacement: ToolbarItemPlacement { isTextFieldFocused ?  : .bottomBar }
 
     func body(content: Content) -> some View {
         content
             .focused($isTextFieldFocused)
-            .toolbarTitleDisplayMode(.inline)
         /// Keyboard, Bold/Italic/Underline/StrikeThrough, Color Buttons
             .toolbar() {
-                ToolbarItemGroup(placement: toolbarPlacement ) {
+                ToolbarItemGroup(placement: .keyboard ) {
                     Button("Keyb", systemImage: "keyboard") {
                         isTextFieldFocused.toggle()
                     }
