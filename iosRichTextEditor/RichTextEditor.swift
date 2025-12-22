@@ -11,7 +11,7 @@ struct RichTextEditor: View {
     @State private var text: AttributedString = ""
     @State private var selection = AttributedTextSelection()
     @State private var lastInsertionPoint: AttributedString.Index = AttributedString("").startIndex
-    @FocusState private var isFocused: Bool
+
 
     var body: some View {
         NavigationStack {
@@ -19,8 +19,7 @@ struct RichTextEditor: View {
                 .padding()
                 .scrollBounceBehavior(.basedOnSize)
                 .navigationTitle("ioS Editor")
-                .focused($isFocused)
-                .toolbars(for: $text, with: $selection, withFocus: $isFocused)
+                .toolbars(for: $text, with: $selection)
         }
         .onAppear {
             // Move the insertion point to the start of the text (or, the last saved point if restored)
@@ -39,14 +38,11 @@ struct RichTextEditor: View {
 extension View {
     func toolbars(
         for text: Binding<AttributedString>,
-        with selection: Binding<AttributedTextSelection>,
-        withFocus isFocused: FocusState<Bool>.Binding
+        with selection: Binding<AttributedTextSelection>
     ) -> some View {
-        self.modifier(Toolbars(text: text, selection: selection, withFocus: isFocused))
-
+        self.modifier(Toolbars(text: text, selection: selection))
     }
 }
-
 
 #Preview {
     RichTextEditor()

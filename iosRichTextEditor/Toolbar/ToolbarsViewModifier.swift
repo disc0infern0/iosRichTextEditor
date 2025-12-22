@@ -9,35 +9,38 @@ import SwiftUI
 struct Toolbars: ViewModifier {
     @Binding var text: AttributedString
     @Binding var selection: AttributedTextSelection
-    var withFocus: FocusState<Bool>.Binding
+    @FocusState private var isTextFieldFocused: Bool
 
     @State var toggleStates: [ToolbarToggle: Bool] = .init(uniqueKeysWithValues: ToolbarToggle.allCases.map{ ($0, false)})
     @Environment(\.fontResolutionContext) var context
     @State private var paddingHeight: CGFloat = 0
     
-//    var toolbarPlacement: ToolbarItemPlacement { isTextFieldFocused ? .keyboard : .bottomBar }
+    var toolbarPlacement: ToolbarItemPlacement { isTextFieldFocused ? .keyboard : .bottomBar }
 
     func body(content: Content) -> some View {
         content
+            .focused($isTextFieldFocused)
             .toolbarTitleDisplayMode(.inline)
         /// Keyboard, Bold/Italic/Underline/StrikeThrough, Color Buttons
             .toolbar() {
-                ToolbarItemGroup(placement: .keyboard ) {
-                    Button("Keyb", systemImage: "keyboard") {
-                        withFocus.wrappedValue.toggle()
-                    }
-                    Spacer()
-                    ForEach (ToolbarToggle.basic) { toggle in
-                        ShowToggleButton(toggle)
-                    }
-                    Spacer()
-                    MyColorPicker(selection: $selection, text: $text)
-                        .task(id: selection) {
-                            /// Update toggles to match typing attributes at the insertion point
-                            if selection.isInsertionPoint(in: text) {
-                                updateToggleStates()
-                            }
+                ToolbarItemGroup(placement: toolbarPlacement ) {
+                    Group {
+                        Button("Keyb", systemImage: "keyboard") {
+                            isTextFieldFocused.toggle()
                         }
+                        Spacer()
+                        ForEach (ToolbarToggle.basic) { toggle in
+                            ShowToggleButton(toggle)
+                        }
+                        Spacer()
+                        ColorPickerIcon()
+                    }
+                    .task(id: selection) {
+                        /// Update toggles to match typing attributes at the insertion point
+                        if selection.isInsertionPoint(in: text) {
+                            updateToggleStates()
+                        }
+                    }
                 }
             }
         /// Customizable toolbars in the secondary Action placement
@@ -45,7 +48,7 @@ struct Toolbars: ViewModifier {
             .toolbar(id: "alignment", content: alignmentFormatting)
             .toolbar(id: "reset", content: resetFormatting)
             .toolbarRole(.editor)
-
+            .withColorPicker(for: $text, selection: $selection)
     }
 
     func resetFormatting() -> some CustomizableToolbarContent {
