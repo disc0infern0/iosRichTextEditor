@@ -3,6 +3,8 @@ import SwiftUI
 #if os(iOS) || os(iPadOS) || targetEnvironment(macCatalyst)
 import UIKit
 
+/// Fairly standard SwiftUI bridge to the color panel used in UIKit, the UIColorPickerViewController
+/// A closure is passed to the initialiser that the co-ordinator uses to submit color changes to the view model.
 struct ColorPickerPanel: UIViewControllerRepresentable {
     
     @Binding var text: AttributedString

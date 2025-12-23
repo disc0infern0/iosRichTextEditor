@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct RichTextEditor: View {
+    @State private var noteName: String?
     @State private var text: AttributedString = ""
     @State private var selection = AttributedTextSelection()
     @State private var lastInsertionPoint: AttributedString.Index = AttributedString("").startIndex
@@ -15,8 +16,8 @@ struct RichTextEditor: View {
     var body: some View {
         NavigationStack {
             TextEditor( text: $text , selection: $selection )
-                .toolbars(for: $text, with: $selection)
-                .navigationTitle("ioS Editor")
+                .addToolbars(for: $text, with: $selection)
+                .navigationTitle(noteName ?? "Rich Text Editor")
                 .toolbarTitleDisplayMode(.inline)
                 .scrollBounceBehavior(.basedOnSize)
         }
@@ -31,17 +32,9 @@ struct RichTextEditor: View {
                 lastInsertionPoint = index
             }
         }
+    }
+}
 
-    }
-}
-extension View {
-    func toolbars(
-        for text: Binding<AttributedString>,
-        with selection: Binding<AttributedTextSelection>
-    ) -> some View {
-        self.modifier(Toolbars(text: text, selection: selection))
-    }
-}
 
 #Preview {
     RichTextEditor()

@@ -6,6 +6,15 @@
 //
 import SwiftUI
 
+extension View {
+    func addToolbars(
+        for text: Binding<AttributedString>,
+        with selection: Binding<AttributedTextSelection>
+    ) -> some View {
+        self.modifier(Toolbars(text: text, selection: selection))
+    }
+}
+
 struct Toolbars: ViewModifier {
     @Binding var text: AttributedString
     @Binding var selection: AttributedTextSelection
@@ -19,12 +28,9 @@ struct Toolbars: ViewModifier {
             .safeAreaInset(edge: .bottom) {
                 HStack {
                     HStack(spacing: 3)  {
-                        ForEach (ToolbarToggle.basic) { toggle in
-                            ShowToggleButton(toggle)
-                        }
-                        .buttonStyle(.glass)
-                        .labelStyle(.iconOnly)
+                        ShowToggleButtons(ToolbarToggle.basic)
                     }
+                    .labelStyle(.iconOnly)
                     /// Create a nice glassy grouping for the four font styling buttons
                     .padding(.horizontal, 4)
                     .padding(.vertical, 2)
@@ -34,6 +40,7 @@ struct Toolbars: ViewModifier {
                 }
             }
         /// Customizable toolbars in the secondary Action placement
+            .toolbar(id: "debug", content: debug)
             .toolbar(id: "text", content: textFormatting )
             .toolbar(id: "alignment", content: alignmentFormatting)
             .toolbar(id: "reset", content: resetFormatting)
@@ -46,6 +53,13 @@ struct Toolbars: ViewModifier {
                 }
             }
     }
+    func debug() -> some CustomizableToolbarContent {
+        ToolbarItem(id: "debug") {
+            Button("Debug") {
+                print("\(selection.attributes(in: text)[\.font])")
+            }
+        }
+    }
 
     func resetFormatting() -> some CustomizableToolbarContent {
         ToolbarItem(id: "clearformatting") {
@@ -56,54 +70,48 @@ struct Toolbars: ViewModifier {
             }
             .labelStyle(.titleAndIcon)
             .foregroundStyle(.red)
-            .buttonStyle(.glass)
         }
         .customizationBehavior(.reorderable)
     }
-
 
     func alignmentFormatting() -> some CustomizableToolbarContent {
         ToolbarItem( id: "textalignment", placement: .secondaryAction ) {
             ControlGroup {
-                ForEach ( ToolbarToggle.textAlignment ) {
-                    toggle in
-                    ShowToggleButton(toggle)
-                }
-
+                ShowToggleButtons(ToolbarToggle.textAlignment)
             }
         }
         .customizationBehavior(.reorderable)
     }
+
     func textFormatting() -> some CustomizableToolbarContent {
         ToolbarItem(id: "textsize", placement: .secondaryAction ) {
             ControlGroup {
-                ForEach ( ToolbarToggle.size ) {
-                    toggle in
-                    ShowToggleButton(toggle)
-                }
-                .labelStyle(.titleOnly)
+                ShowToggleButtons(ToolbarToggle.size)
+                    .labelStyle(.titleOnly)
             }
         }
         .customizationBehavior(.reorderable)
     }
 
-    /// Helper Function
-
-    func ShowToggleButton(_ toggle: ToolbarToggle ) -> some View {
-        Toggle(
-            toggle.description, systemImage: toggle.icon,
-            isOn: Binding(
-                get: { toggleStates[toggle] ?? false },
-                set: { _ in
-                    runAction( for: toggle )
-                    /// Update toggles if a range was highlighted for a change, as otherwise the toggles wont change until the selection changes
-                    if !selection.isInsertionPoint(in: text) {
-                        updateToggleStates()
+    /// Layout Helper Function
+    func ShowToggleButtons(_ toggles: [ToolbarToggle] ) -> some View {
+        ForEach(toggles) { toggle in
+            Toggle(
+                toggle.description, systemImage: toggle.icon,
+                isOn: Binding(
+                    get: { toggleStates[toggle] ?? false },
+                    set: { _ in
+                        runAction( for: toggle )
+                        /// Update toggles if a range was highlighted for a change, as otherwise the toggles wont change until the selection changes
+                        if !selection.isInsertionPoint(in: text) {
+                            updateToggleStates()
+                        }
                     }
-                }
+                )
             )
-        )
+        }
         .toggleStyle(.button)
+        .buttonStyle(.glass)
     }
 
 
