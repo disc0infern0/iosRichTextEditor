@@ -9,27 +9,27 @@ import SwiftUI
 struct Toolbars: ViewModifier {
     @Binding var text: AttributedString
     @Binding var selection: AttributedTextSelection
-    @FocusState private var isTextFieldFocused: Bool
-
     @State var toggleStates: [ToolbarToggle: Bool] = .init(uniqueKeysWithValues: ToolbarToggle.allCases.map{ ($0, false)})
     @Environment(\.fontResolutionContext) var context
 
-//    var toolbarPlacement: ToolbarItemPlacement { isTextFieldFocused ?  : .bottomBar }
-
     func body(content: Content) -> some View {
         content
-            .focused($isTextFieldFocused)
-        /// Keyboard, Bold/Italic/Underline/StrikeThrough, Color Buttons
-            .toolbar() {
-                ToolbarItemGroup(placement: .keyboard ) {
-                    Button("Keyb", systemImage: "keyboard") {
-                        isTextFieldFocused.toggle()
+        /// Bold/Italic/Underline/StrikeThrough, Color Buttons
+        /// A standard toolbar placed at .keyboard or .bottombar is very fragile inside a NavigationStack, so inset a regular view into the bottom safe area.
+            .safeAreaInset(edge: .bottom) {
+                HStack {
+                    HStack(spacing: 3)  {
+                        ForEach (ToolbarToggle.basic) { toggle in
+                            ShowToggleButton(toggle)
+                        }
+                        .buttonStyle(.glass)
+                        .labelStyle(.iconOnly)
                     }
-                    Spacer()
-                    ForEach (ToolbarToggle.basic) { toggle in
-                        ShowToggleButton(toggle)
-                    }
-                    Spacer()
+                    /// Create a nice glassy grouping for the four font styling buttons
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 2)
+                    .background(.ultraThinMaterial, in: Capsule())
+                    /// Let the color picker stand alone
                     ColorPickerIcon()
                 }
             }

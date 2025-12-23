@@ -3,7 +3,7 @@
 A replacement for the stock colorpicker used in iOS and macOS, offering a couple of minor differences:
 - The picker icon and the launch of the color panel are separated and controlled/configured separately.
 - The picker icon animates its surrounding color ring.
-- If used with AttributedString, the inner color ring always reflects the current color either at the cursor or over the selection. (In the case of a selection spanning multiple colors, the .secondary (gray) color is shown.[ see To-Do section ] )
+- If used with AttributedString, the inner color ring always reflects the current color either at the cursor or over the selection. (In the case of a selection spanning multiple colors, a gradient is shown of (up to 4) the unique colors highlighted )
 - In iOS, the color panel launches correctly from a keyboard-bound toolbar. (The stock picker is bugged.)
 - In macOS, the picker icon is consistent with how it appears on iOS, with the animated outer ring and auto-updating center color.
 
@@ -46,4 +46,4 @@ I could therefore just have used the stock NSColorPanel.shared object, but now t
 # To Do
 - A little further tweaking would mean that both the AttributedString parameters could be made optional, and then it could be used as a standalone color picker regardless of what the color is being picked for. 
 - Further to the above, separate into its own package
-- Update the color picker icon to show an angular gradient of the colors in the selected range, if that selected range has more than one color. 
+- ~~Update the color picker icon to show an angular gradient of the colors in the selected range, if that selected range has more than one color. ~~ Done!

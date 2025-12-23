@@ -14,7 +14,8 @@ enum ColourPickerStyle {
     static let rainbowStrokeWidth = 3.0
     static let rainbowAnimationDuration = 4.2
     static let pickerInset = 2.5
-    static let shrinkRatio = 0.7
+    static let shrinkRatio = 0.95
+    static let iOSIconSize = 25.0
 }
 
 /// A colour picker that indicates its function by both a circular moving pattern, and an inner circle that shows the current text color
@@ -25,24 +26,23 @@ struct ColorPickerIcon: View  {
     @State private var rotation = 0.0
 
     var body: some View {
-#if os(macOS)
-        let centerColor: Color = colorViewModel.centerColor
-#else
-        // For some reason iOS shows a dull grey as the primaryColor, which is not the default typing color
-        // The default typing color is either black or white depending upon the colorScheme.
-        // Here we manually correct use of .primary (which is set when no color is detected in the selection )
-        var centerColor: Color {
-            if colorViewModel.centerColor == .primary { colorScheme == .dark ? .white : .black }
-            else { colorViewModel.centerColor }
-        }
-#endif
-
+//#if os(macOS)
+//        let centerColor: Color = colorViewModel.centerColor
+//#else
+//        // For some reason iOS shows a dull grey as the primaryColor, which is not the default typing color
+//        // The default typing color is either black or white depending upon the colorScheme.
+//        // Here we manually correct use of .primary (which is set when no color is detected in the selection )
+//        var centerColor: Color {
+//            if colorViewModel.centerColor == .primary { colorScheme == .dark ? .white : .black }
+//            else { colorViewModel.centerColor }
+//        }
+//#endif
         // Inner circle showing the picker color
         Circle()
             .inset(by: ColourPickerStyle.pickerInset + ColourPickerStyle.rainbowStrokeWidth/2)
-            .fill(centerColor)
+            .fill( colorViewModel.mesh(colorViewModel.centerColor))
             // By default, the outercircle is bigger than other toolbar text icons, so shrink it down [ without setting a specific size ]
-            .containerRelativeFrame(.horizontal ) { length, axis  in ColourPickerStyle.shrinkRatio * length}
+//            .scaleEffect(ColourPickerStyle.shrinkRatio)
             .background(
                 // Moving rainbow outer circle
                 Circle()
@@ -57,14 +57,32 @@ struct ColorPickerIcon: View  {
                         rotation = 360
                     }
             )
+        #if os(iOS)
+            .frame(width: ColourPickerStyle.iOSIconSize, height: ColourPickerStyle.iOSIconSize)
+        #endif
             .onTapGesture {
                 colorViewModel.showColorPicker()
             }
     }
+
+
 }
 
-#Preview {
-    ColorPickerIcon()
-        .frame(width: 50, height: 50)
+
+
+#Preview("icon") {
+    @Previewable @State var colorViewModel = ColorViewModel()
+    colorViewModel.centerColor = [.red, .blue]
+    return ColorPickerIcon()
         .border(Color.blue)
+        .environment( \.colorViewModel, colorViewModel )
+        .frame(width: 30, height: 30)
+}
+
+#Preview("mesh") {
+    @Previewable @State var colorViewModel = ColorViewModel()
+    let colors: [Color] = [.red, .blue ]
+    Circle()
+        .fill( colorViewModel.mesh(colors) )
+        .frame(width: 30)
 }

@@ -15,7 +15,7 @@ extension EnvironmentValues {
 @Observable
 final class ColorViewModel {
     var selectedColor: Color = .primary
-    var centerColor: Color = .primary
+    var centerColor: [Color] = [.primary]
 
     // Activation of the picker
 #if os(macOS)
@@ -45,18 +45,22 @@ final class ColorViewModel {
     }
 
     /// update the center of the color picker to the current colour
-    func updateCenterColor(text: AttributedString, selection: AttributedTextSelection) {
-        // first get list of unique, optional colours in the selection
-        // If no colors have been set, the set will contain one Optional(nil) value
-        let colors = Set(selection.attributes(in: text)[\.foregroundColor].map{ $0 })
+    func updateCenterColor(text: AttributedString, selection: AttributedTextSelection, colorScheme: ColorScheme) {
+        var defaultTextColor: Color { colorScheme == .dark ? .white : .black }
+
+        // Get a list of the unique, optional colours in the selection
+        // If no colors have been set, the set will still contain one Optional(nil) value
+        let colors = Set(selection.attributes(in: text)[\.foregroundColor].map{ $0  ?? defaultTextColor })
+        // now make the result an array
+            .map{ $0 }
 
         if colors.isEmpty {  // should never be the case, but lets assume things might change.
-            centerColor = .primary
-        } else if colors.count == 1 {
-            let first = colors.first! ?? .primary //the first color is still an optional
-            centerColor = first
+            centerColor = [defaultTextColor]
+//        } else if colors.count == 1 {
+//            let first = colors.first! ?? defaultTextColor //the first color is still an optional
+//            centerColor = [first]
         } else { // For ranges of more than one colour, show the secondary colour
-            centerColor = .secondary
+            centerColor = colors
         }
     }
 
@@ -66,4 +70,17 @@ final class ColorViewModel {
             container.foregroundColor = selectedColor
         }
     }
+
+    /// Create a mesh gradient for the center of the color picker icon
+    func mesh(_ colours: [Color]) -> MeshGradient {
+    let points : [SIMD2<Float>] =
+    colours.count == 3 ? [ [0,0], [0.6,0.0], [1,0],[0,1],[0.6,1], [1,1]] : [ [0,0], [1, 0], [0,1], [1,1] ]
+    let c = colours.first ?? .primary
+    let meshcolors = switch colours.count {
+        case 0,1: [c,c,c,c]
+        case 2,3:  colours + colours
+        default: colours
+    }
+    return MeshGradient(width: colours.count == 3 ? 3 : 2, height: 2, points: points, colors: meshcolors)
+}
 }

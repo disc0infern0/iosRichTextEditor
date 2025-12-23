@@ -12,6 +12,7 @@ struct MyColorPicker: ViewModifier {
     @Binding var text: AttributedString
     @Binding var selection: AttributedTextSelection
     @State var colorViewModel = ColorViewModel()
+    @Environment(\.colorScheme) var colorScheme
 
     func body(content: Content) -> some View {
 
@@ -19,18 +20,18 @@ struct MyColorPicker: ViewModifier {
             .task(id: colorViewModel.selectedColor) {
                 // A new color has been selected, so update the text and the color picker centre
                 colorViewModel.updateText(text: &text, selection: &selection)
-                colorViewModel.centerColor = colorViewModel.selectedColor
+                colorViewModel.centerColor = [colorViewModel.selectedColor]
             }
             .task(id: selection) {
                 // The cursor has moved in the text, so update the color picker centre to show the current text color
-                colorViewModel.updateCenterColor( text: text, selection: selection)
+                colorViewModel.updateCenterColor( text: text, selection: selection, colorScheme: colorScheme)
             }
 #if os(macOS)
             .task { colorViewModel.setupPanel() }  // On macOS, prepare a floating panel of colours
 #elseif os(iOS)
         // On iOS, present the colour picker in a bottom sheet
             .sheet(isPresented: colorViewModel.colorPickerToggleBinding) {
-                ColorPickerPanel(text: $text, selection: $selection, currentCentre: colorViewModel.centerColor,
+                ColorPickerPanel(text: $text, selection: $selection, currentCentre: colorViewModel.centerColor.first ?? .primary,
                                  submitColorChange: colorViewModel.newSelectedColor )
                 .presentationDetents([.noAlpha, .withAlpha])
                 .presentationDragIndicator(.hidden)
