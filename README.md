@@ -17,8 +17,11 @@ This code uses an enum to hold cases for each button, and a dictionary of those 
 This approach allows very little code repetition, and makes management of the buttons somewhat easier.
 
 ## Toolbars.
-Rather than create two custom views for the toolbar, the approach here is to attempt to use native SwiftUI toolbars. 
-I'm not sure it's a total success honestly, as CustomizableToolbarContent cannot be easily mixed with other code to control the actions from each code, and view modifier is needed to control state.
+the first iteration of this project aimed to use all native SwiftUI toolbars.
+For iOS in particular, this required use of the .keyboard placement within a NavigationStack, which unfortunately always generated layout errors at runtime.
+To resolve this, the Bold/Italic/Underline/Strikethrough toggles are now placed in a small glassy view inset inthe safe area at the bottom of the screen.
+Using secondary action toolbars for the remaining font toggles works well.
+Overall, I'm happy with the way this has turned out. It looks like a native iOS 26 app.
 
 ## Color Picker
 I started this exercise as a mac app, and the color picker on the mac app, is, being kind, weird, or if not being kind, downright ugly. 
