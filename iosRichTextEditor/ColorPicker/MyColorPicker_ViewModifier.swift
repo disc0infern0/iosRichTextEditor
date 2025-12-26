@@ -11,15 +11,17 @@ import SwiftUI
 struct MyColorPicker: ViewModifier {
     @Binding var text: AttributedString
     @Binding var selection: AttributedTextSelection
-    @State var colorViewModel = ColorViewModel()
+    @Environment(\.colorViewModel) var colorViewModel
     @Environment(\.colorScheme) var colorScheme
 
     func body(content: Content) -> some View {
 
         content
             .task(id: colorViewModel.selectedColor) {
-                // A new color has been selected, so update the text and the color picker centre
+                // A new color has been selected, so update the text
                 colorViewModel.updateText(text: &text, selection: &selection)
+                // Need to update the color picker icon manually
+                // as no change in selection is made.
                 colorViewModel.centerColor = [colorViewModel.selectedColor]
             }
             .task(id: selection) {
@@ -41,7 +43,6 @@ struct MyColorPicker: ViewModifier {
                 fatalError("Color Picker has not yet been implemented on this platform.")
             }
 #endif
-            .environment( \.colorViewModel, colorViewModel )
     }
 }
 extension View {

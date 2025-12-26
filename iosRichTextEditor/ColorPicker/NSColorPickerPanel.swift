@@ -49,16 +49,12 @@ final class NSColorPickerPanel: NSColorPanel, NSColorChanging {
         /// Determine whether or not to show alpha values and an opacity slider
         self.showsAlpha = showsAlpha
 
-        /// The following two lines are not strictly necessary since this class is the first responder
-        /// and should automatically then receive the color change request.
-        /// The two lines below, with the @objc function, guarantee this. [ Obj C .. eugh.]
-        self.setTarget(self) // Set self as the target for color changes
-        self.setAction(#selector(handleColorChange(_:))) // send to this objc function
     }
-
-    @objc private func handleColorChange(_ sender: NSColorPanel?) {
-        changeColor(sender)
-    }
+    
+//    Dont add Objective C target/hander, as it is bugged and will fire incorrectly
+//    @objc private func handleColorChange(_ sender: NSColorPanel?) {
+//        changeColor(sender)
+//    }
 
     /// Close automatically when out of focus, e.g. outside click
     override func resignMain() {

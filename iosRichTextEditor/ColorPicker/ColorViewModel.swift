@@ -48,20 +48,11 @@ final class ColorViewModel {
     func updateCenterColor(text: AttributedString, selection: AttributedTextSelection, colorScheme: ColorScheme) {
         var defaultTextColor: Color { colorScheme == .dark ? .white : .black }
 
-        // Get a list of the unique, optional colours in the selection
-        // If no colors have been set, the set will still contain one Optional(nil) value
-        let colors = Set(selection.attributes(in: text)[\.foregroundColor].map{ $0  ?? defaultTextColor })
-        // now make the result an array
-            .map{ $0 }
-
-        if colors.isEmpty {  // should never be the case, but lets assume things might change.
-            centerColor = [defaultTextColor]
-//        } else if colors.count == 1 {
-//            let first = colors.first! ?? defaultTextColor //the first color is still an optional
-//            centerColor = [first]
-        } else { // For ranges of more than one colour, show the secondary colour
-            centerColor = colors
-        }
+        // Get a list of the colours in the selection
+        let colors = selection.attributes(in: text)[\.foregroundColor].map{ $0  ?? defaultTextColor }
+        // If no colors have been set, the array *should* still contain one Optional(nil) value
+        // but check for isEmpty just in case things change.
+        centerColor = colors.isEmpty ? [defaultTextColor] : colors
     }
 
     /// update the selected text to match the newly selected color
@@ -73,14 +64,14 @@ final class ColorViewModel {
 
     /// Create a mesh gradient for the center of the color picker icon
     func mesh(_ colours: [Color]) -> MeshGradient {
-    let points : [SIMD2<Float>] =
-    colours.count == 3 ? [ [0,0], [0.6,0.0], [1,0],[0,1],[0.6,1], [1,1]] : [ [0,0], [1, 0], [0,1], [1,1] ]
-    let c = colours.first ?? .primary
-    let meshcolors = switch colours.count {
-        case 0,1: [c,c,c,c]
-        case 2,3:  colours + colours
-        default: colours
+        let points : [SIMD2<Float>] =
+        colours.count == 3 ? [ [0,0], [0.6,0.0], [1,0],[0,1],[0.6,1], [1,1]] : [ [0,0], [1, 0], [0,1], [1,1] ]
+        let c = colours.first ?? .primary
+        let meshcolors = switch colours.count {
+            case 0,1: [c,c,c,c]
+            case 2,3:  colours + colours
+            default: colours
+        }
+        return MeshGradient(width: colours.count == 3 ? 3 : 2, height: 2, points: points, colors: meshcolors)
     }
-    return MeshGradient(width: colours.count == 3 ? 3 : 2, height: 2, points: points, colors: meshcolors)
-}
 }

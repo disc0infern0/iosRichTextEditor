@@ -36,7 +36,7 @@ struct Toolbars: ViewModifier {
                     .padding(.vertical, 2)
                     .background(.ultraThinMaterial, in: Capsule())
                     /// Let the color picker stand alone
-                    ColorPickerIcon()
+                    ColorPickerIcon(text: $text, selection: $selection)
                 }
             }
         /// Customizable toolbars in the secondary Action placement
@@ -45,7 +45,6 @@ struct Toolbars: ViewModifier {
             .toolbar(id: "alignment", content: alignmentFormatting)
             .toolbar(id: "reset", content: resetFormatting)
             .toolbarRole(.editor)
-            .withColorPicker(for: $text, selection: $selection)
             .task(id: selection) {
                 /// Update toggles to match typing attributes at the insertion point
                 if selection.isInsertionPoint(in: text) {
