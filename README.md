@@ -25,18 +25,18 @@ Overall, I'm happy with the way this has turned out. It looks like a native iOS 
 
 ## Color Picker
 I started this exercise as a mac app, and the color picker on the mac app, is, being kind, weird, or if not being kind, downright ugly. 
-This code thus replaces the color picker with aa custom version which has a number of immprovements
-a) The central circle always updates to show the pencil colour. (The native one only changes when you change the colour).
-b) It has a neat animation of the rainbow colours to draw the eye and reinforce the notion that this button is for changing the colour. (Animation is disabled for those that have set the accessibility option to reduce motion )
+This code now uses a TextColorPicker which is available separately in its own package. It can be direct ColorPicker replacement on iOS, iPadOS and macOS.
+As the name suggests, it also can operate on AttributedStrings in an intuitive manner. 
 
 ## Updating toolbar status
 To accurately assess the current attributes, and determine which toggles should be highlighed for the current selection, this code uses the ```selection.attributes``` property, and avoids use of a probe to create an array of all containers.
-
 ---
 
-# Miscellaneous Notes
+# Miscellaneous Notes / Bug Fixes
 
-I have noticed that when setting "Extra Large" font, as an example, then when this is made bold, the attributes no longer match "Extra Large", but only the Bold font, and thus the "Extra Large" toggle button is not highlighted. This is also the case for italic, but is not true for underline and strikethrough, both of which show the expected toggles highlighted.
+After applying Bold or Italic styles to text previously formatted with a size characteristic, such as "Extra Large", it is no longer possible to tell if the size is "Extra Large" by checking for that characteristic directly. This issue is now resolved within the code by first getting the font size for the "Extra Large" font, and then checking for that size. 
+This corrects a bug with the first release. 
+
 
 The last insertion point code herein is solely for use with a future verion of the app that saves and restores data either to disk or to SwiftData. 
 
@@ -45,7 +45,7 @@ Storing the tree and maintaining it whilst typing, and allowing seamless switchi
 
 ---
 
-I'll aim to update this code periodically as it contains some useful reference material, and I hope it's been useful for anyone reading here.
+I'll update this code periodically as it contains some useful reference material, and I hope it's been useful for anyone reading here.
 
 best wishes,
 Andrew

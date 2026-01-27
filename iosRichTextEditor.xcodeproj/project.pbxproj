@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49B68D572F2955D9009C76E7 /* AGENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = 49B68D562F2955D9009C76E7 /* AGENTS.md */; };
 		49C83F4D2EE6383A00B6A83F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 49C83F4C2EE6383A00B6A83F /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		49B68D532F29554C009C76E7 /* swiftlint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = swiftlint.sh; sourceTree = "<group>"; };
+		49B68D552F295561009C76E7 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		49B68D562F2955D9009C76E7 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENTS.md; sourceTree = "<group>"; };
 		49C83F182EE4668200B6A83F /* iosRichTextEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosRichTextEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49C83F4C2EE6383A00B6A83F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -34,12 +38,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		49B68D542F29554C009C76E7 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				49B68D532F29554C009C76E7 /* swiftlint.sh */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
 		49C83F0F2EE4668200B6A83F = {
 			isa = PBXGroup;
 			children = (
+				49B68D562F2955D9009C76E7 /* AGENTS.md */,
+				49B68D542F29554C009C76E7 /* Scripts */,
 				49C83F4C2EE6383A00B6A83F /* README.md */,
 				49C83F1A2EE4668200B6A83F /* iosRichTextEditor */,
 				49C83F192EE4668200B6A83F /* Products */,
+				49B68D552F295561009C76E7 /* .swiftlint.yml */,
 			);
 			sourceTree = "<group>";
 		};
@@ -84,7 +99,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2610;
-				LastUpgradeCheck = 2610;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					49C83F172EE4668200B6A83F = {
 						CreatedOnToolsVersion = 26.1.1;
@@ -115,6 +130,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49B68D572F2955D9009C76E7 /* AGENTS.md in Resources */,
 				49C83F4D2EE6383A00B6A83F /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -191,6 +207,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -248,6 +265,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};

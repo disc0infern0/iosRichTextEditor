@@ -1,0 +1,158 @@
+# .swiftlint.yml
+
+included:
+  - iosRichTextEditor
+  - App
+  - Tests
+
+excluded:
+  - .build
+  - DerivedData
+  - Scripts
+  - Packages
+
+# Opt-in rules that align with modern Swift best practices
+opt_in_rules:
+  - array_init
+  - attributes
+  - closure_end_indentation
+  - closure_spacing
+  - collection_alignment
+  - contains_over_filter_is_empty
+  - contains_over_range_nil_comparison
+  - discouraged_optional_boolean
+  - empty_count
+  - empty_string
+  - file_name_no_space
+  - file_length
+  - first_where
+  - force_unwrapping
+  - function_default_parameter_at_end
+  - identical_operands
+  - implicit_return
+  - implicitly_unwrapped_optional
+  - joined_default_parameter
+  - let_var_whitespace
+  - literal_expression_end_indentation
+  - lower_acl_than_parent
+  - modifier_order
+  - multiline_arguments
+  - multiline_function_chains
+  - multiline_literal_brackets
+  - multiline_parameters
+  - nimble_operator
+  - no_extension_access_modifier
+  - operator_usage_whitespace
+  - overridden_super_call
+  - pattern_matching_keywords
+  - prefer_self_type_over_type_of_self
+  - prefer_zero_over_explicit_init
+  - private_action
+  - private_outlet
+  - private_subject
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - required_enum_case
+  - sorted_first_last
+  - static_operator
+  - strict_fileprivate
+  - switch_case_alignment
+  - trailing_closure
+  - toggle_bool
+  - unneeded_parentheses_in_closure_argument
+  - vertical_parameter_alignment_on_call
+  - vertical_whitespace_closing_braces
+  - vertical_whitespace_opening_braces
+  - yoda_condition
+
+disabled_rules:
+  # Allow longer lines for SwiftUI DSL and previews
+  - line_length
+  # Allow TODOs; consider enabling with custom warnings later
+  - todo
+
+# Custom rules to reflect AGENTS.md
+custom_rules:
+  no_observable_object:
+    included: ".*\\.swift"
+    name: "Avoid ObservableObject"
+    regex: "\\bObservableObject\\b"
+    message: "Never use ObservableObject; prefer @Observable classes."
+    severity: error
+
+  no_foreground_color:
+    included: ".*\\.swift"
+    name: "Use foregroundStyle()"
+    regex: "\\bforegroundColor\\("
+    message: "Use foregroundStyle() instead of foregroundColor()."
+    severity: warning
+
+  no_corner_radius:
+    included: ".*\\.swift"
+    name: "Use clipShape(.rect(cornerRadius:))"
+    regex: "\\bcornerRadius\\("
+    message: "Use clipShape(.rect(cornerRadius:)) instead of cornerRadius()."
+    severity: warning
+
+  no_tabItem:
+    included: ".*\\.swift"
+    name: "Use Tab API"
+    regex: "\\btabItem\\s*\\("
+    message: "Use the new Tab API instead of tabItem()."
+    severity: warning
+
+  no_gcd_main_async:
+    included: ".*\\.swift"
+    name: "Avoid DispatchQueue.main.async"
+    regex: "DispatchQueue\\.main\\.async\\b"
+    message: "Use Swift concurrency instead of GCD."
+    severity: error
+
+  no_task_sleep_nanoseconds:
+    included: ".*\\.swift"
+    name: "Use Task.sleep(for:)"
+    regex: "Task\\.sleep\\s*\\(\\s*nanoseconds:"
+    message: "Use Task.sleep(for:) instead of Task.sleep(nanoseconds:)."
+    severity: warning
+
+  no_uikit_colors_in_swiftui:
+    included: ".*\\.swift"
+    name: "Avoid UIKit colors in SwiftUI"
+    regex: "\\bUIColor\\."
+    message: "Avoid UIKit colors in SwiftUI."
+    severity: warning
+
+  no_uiscreen_bounds:
+    included: ".*\\.swift"
+    name: "Avoid UIScreen.main.bounds"
+    regex: "UIScreen\\.main\\.bounds"
+    message: "Avoid UIScreen.main.bounds; prefer SwiftUI layout alternatives."
+    severity: warning
+
+  no_single_param_onChange:
+    included: ".*\\.swift"
+    name: "Avoid single-parameter onChange"
+    regex: "\\bonChange\\s*\\(\\s*[^:,]+\\s*\\)\\s*\\{"
+    message: "Avoid single-parameter onChange; use two-parameter or no-parameter variants."
+    severity: warning
+
+analyzer_rules:
+  - explicit_self
+  - unused_import
+
+identifier_name:
+  min_length: 2
+  excluded: [i, j, x, y, id, to, ok]
+
+type_name:
+  min_length: 3
+
+cyclomatic_complexity:
+  ignores_case_statements: true
+
+file_length:
+  warning: 800
+  error: 1200
+
+reporter: "xcode"
+
