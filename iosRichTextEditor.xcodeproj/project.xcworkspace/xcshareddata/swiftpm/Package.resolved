@@ -1,0 +1,15 @@
+{
+  "originHash" : "f8bb46f89159b0eb71ca65a7a5cf1e9a977fa72ebcdd00e80443b500f1f7c427",
+  "pins" : [
+    {
+      "identity" : "textcolorpicker",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/disc0infern0/TextColorPicker",
+      "state" : {
+        "revision" : "8b3a073b53598d9ee87f036c550e07f5a07393ae",
+        "version" : "0.0.1"
+      }
+    }
+  ],
+  "version" : 3
+}

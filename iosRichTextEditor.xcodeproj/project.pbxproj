@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49400BC62F295E9F00C8F63C /* TextColorPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 49400BC52F295E9F00C8F63C /* TextColorPicker */; };
 		49B68D572F2955D9009C76E7 /* AGENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = 49B68D562F2955D9009C76E7 /* AGENTS.md */; };
 		49C83F4D2EE6383A00B6A83F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 49C83F4C2EE6383A00B6A83F /* README.md */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49400BC62F295E9F00C8F63C /* TextColorPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +88,7 @@
 			);
 			name = iosRichTextEditor;
 			packageProductDependencies = (
+				49400BC52F295E9F00C8F63C /* TextColorPicker */,
 			);
 			productName = iosRichTextEditor;
 			productReference = 49C83F182EE4668200B6A83F /* iosRichTextEditor.app */;
@@ -115,6 +118,9 @@
 			);
 			mainGroup = 49C83F0F2EE4668200B6A83F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				49400BC42F295E9F00C8F63C /* XCRemoteSwiftPackageReference "TextColorPicker" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49C83F192EE4668200B6A83F /* Products */;
 			projectDirPath = "";
@@ -358,6 +364,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		49400BC42F295E9F00C8F63C /* XCRemoteSwiftPackageReference "TextColorPicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/disc0infern0/TextColorPicker";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		49400BC52F295E9F00C8F63C /* TextColorPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 49400BC42F295E9F00C8F63C /* XCRemoteSwiftPackageReference "TextColorPicker" */;
+			productName = TextColorPicker;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 49C83F102EE4668200B6A83F /* Project object */;
 }
