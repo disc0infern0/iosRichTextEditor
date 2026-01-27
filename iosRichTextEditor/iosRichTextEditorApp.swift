@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct iosRichTextEditorApp: App {
+struct IosRichTextEditorApp: App {
     var body: some Scene {
         WindowGroup {
             RichTextEditor()

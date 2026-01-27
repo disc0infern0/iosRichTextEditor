@@ -19,10 +19,13 @@ if command -v swiftlint >/dev/null 2>&1; then
     # Check for any Swift files under SRCROOT
    #if find . -type f -name "*.swift" -not -path "./Carthage/*" -not -path "./Pods/*" | grep -q ".swift"; then
         # Prefer local config if present
-        if [ -f ".swiftlint.yml" ]; then
+        if [ -f "${SRCROOT}/.swiftlint.yml" ]; then
+            echo "pwd"
             pwd
-            echo "Using .swiftlint.yml at the above location. ( ${SRCROOT}/.swiftlint.yml )? "
-            swiftlint --config .swiftlint.yml || true
+            echo " ls -l .swiftlint.yml"
+            ls -l .swiftlint.yml
+            echo "Using .swiftlint.yml at the above location. ( ${SRCROOT} )? "
+            swiftlint --config ${SRCROOT}/.swiftlint.yml || true
         else
             echo "No .swiftlint.yml found. Running with default configuration."
             swiftlint || true

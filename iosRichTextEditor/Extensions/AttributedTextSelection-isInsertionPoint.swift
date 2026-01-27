@@ -5,13 +5,6 @@
 //  Created by Andrew on 06/12/2025.
 //
 
-
-//
-// AttributedTextSelection isInsertionPoint
-//  toggles
-//
-//  Created by Andrew on 04/12/2025.
-//
 import SwiftUI
 
 extension AttributedTextSelection {
