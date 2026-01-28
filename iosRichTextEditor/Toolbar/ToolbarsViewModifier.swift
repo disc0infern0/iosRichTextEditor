@@ -23,6 +23,7 @@ struct Toolbars: ViewModifier {
     @Environment(\.fontResolutionContext)
     var context
 
+    // Track point sizes so that we can accurately update toggles to indicate size characteristics
     @State var titlePointSize: Double = 0
     @State var title2PointSize: Double = 0
     @State var title3PointSize: Double = 0

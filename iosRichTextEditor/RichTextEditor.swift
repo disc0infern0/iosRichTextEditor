@@ -13,11 +13,13 @@ struct RichTextEditor: View {
 
     var body: some View {
         NavigationStack {
-            TextEditor( text: $text, selection: $selection )
-                .addToolbars(for: $text, with: $selection)
-                .navigationTitle(noteName ?? "Rich Text Editor")
-                .toolbarTitleDisplayMode(.inline)
-                .scrollBounceBehavior(.basedOnSize)
+            VStack(spacing: 0) {
+                TextEditor( text: $text, selection: $selection )
+                    .addToolbars(for: $text, with: $selection)
+                    .navigationTitle(noteName ?? "Rich Text Editor")
+                    .toolbarTitleDisplayMode(.inline)
+                    .scrollBounceBehavior(.basedOnSize)
+            }
         }
         // .saveAndRestore($selection, in: $text) // Future use
     }
