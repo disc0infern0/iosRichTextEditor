@@ -22,7 +22,6 @@ struct Toolbars: ViewModifier {
     @State var toggleStates: [ToolbarToggle: Bool] = .init(uniqueKeysWithValues: ToolbarToggle.allCases.map { ($0, false) })
     @Environment(\.fontResolutionContext)
     var context
-
     // Track point sizes so that we can accurately update toggles to indicate size characteristics
     @State var titlePointSize: Double = 0
     @State var title2PointSize: Double = 0
@@ -63,6 +62,8 @@ struct Toolbars: ViewModifier {
                 }
             }
             .onAppear {
+                /// Capture point sizes of the different size characteristics to enable
+                /// toggle buttons to correctly detect each size correctly.
                 titlePointSize = Font.title.resolve(in: context).pointSize
                 title2PointSize = Font.title2.resolve(in: context).pointSize
                 title3PointSize = Font.title3.resolve(in: context).pointSize
@@ -138,103 +139,115 @@ struct Toolbars: ViewModifier {
     /// Layout Helper Function
     func showToggleButtons(_ toggles: [ToolbarToggle] ) -> some View {
         ForEach(toggles) { toggle in
-            Toggle(
-                toggle.description,
-                systemImage: toggle.icon,
-                isOn: Binding(
-                    get: { toggleStates[toggle] ?? false },
-                    set: { _ in
-                        runAction( for: toggle )
-                        /// Update toggles if a range was highlighted for a change, as otherwise the toggles wont change until the selection changes
-                        if !selection.isInsertionPoint(in: text) {
-                            updateToggleStates()
-                        }
-                    }
-                )
-            )
+            ToggleButton(toggle: toggle, toggleState: $toggleStates[toggle], text: $text, selection: $selection)
         }
         .toggleStyle(.button)
         .buttonStyle(.glass)
     }
-
-    /*****************************
-        App Actions
-    *************************/
-    /// perform a toggle of the specificed togglebutton. Note that we do not update the state dictionary here.
-    /// that is done automatically based on the selection change.
-    func runAction(for toggle: ToolbarToggle) {
-        text.transformAttributes(in: &selection) { container in
-            // Resolve current font and determine current point size
-            let currentFont: Font = container.font ?? .default
-            let resolved = currentFont.resolve(in: context)
-            switch toggle {
-            case .bold:
-                container.font = currentFont.bold(!resolved.isBold)
-            case .italic:
-                container.font = currentFont.italic(!resolved.isItalic)
-                //                    let font: Font = container.font ?? .default
-                //                    container.font = font.italic(!font.resolve(in: context).isItalic)
-            case .underline: container.underlineStyle = container.underlineStyle == .none ? .single : .none
-            case .strikethrough: container.strikethroughStyle = container.strikethroughStyle == .none ? .single : .none
-            case .leftAlign: container.alignment = container.alignment == .left ? .right : .left
-            case .rightAlign: container.alignment = container.alignment == .right ? .left : .right
-            case .centerAlign: container.alignment = container.alignment == .center ? .left : .center
-            case .extraLarge:
-                // Toggle behavior: if we're already at title size, go back to body size; otherwise set to title size
-                container.font = container.font == .title ? .body : .title
-                restoreBoldandItalic()
-            case .large:
-                container.font = container.font == .title2 ? .body : .title2
-                restoreBoldandItalic()
-            case .medium:
-                container.font = container.font == .title3 ? .body : .title3
-                restoreBoldandItalic()
-            case .body:
-                container.font = .body
-                restoreBoldandItalic()
-            case .footnote:
-                container.font = container.font == .footnote ? .body : .footnote
-                restoreBoldandItalic()
-            }
-            func restoreBoldandItalic() {
-                // Preserve resolved traits (bold/italic) when constructing the new font
-                container.font = (container.font ?? .default).bold(resolved.isBold)
-                container.font = (container.font ?? .default).italic(resolved.isItalic)
+    
+    struct ToggleButton: View {
+        let toggle: ToolbarToggle
+        @Binding var toggleState: Bool?
+        @Binding var text: AttributedString
+        @Binding var selection: AttributedTextSelection
+        
+        @Environment(\.fontResolutionContext)
+        var context
+        
+        var body: some View {
+            Toggle( toggle.description, systemImage: toggle.icon, isOn:
+                        Binding(
+                            get: { toggleState ?? false },
+                            set: { _ in
+                                runAction( for: toggle )
+                                /// Update toggles if a range was highlighted for a change, as otherwise the toggles wont change until the selection changes
+                                if !selection.isInsertionPoint(in: text) {
+                                    updateToggleStates()
+                                }
+                            }
+                        )
+            )
+        }
+        
+        /*****************************
+         App Actions
+         *************************/
+        /// perform a toggle of the specificed togglebutton. Note that we do not update the state dictionary here.
+        /// that is done automatically based on the selection change.
+        func runAction(for toggle: ToolbarToggle) {
+            text.transformAttributes(in: &selection) { container in
+                // Resolve current font and determine current point size
+                let currentFont: Font = container.font ?? .default
+                let resolved = currentFont.resolve(in: context)
+                switch toggle {
+                case .bold:
+                    container.font = currentFont.bold(!resolved.isBold)
+                case .italic:
+                    container.font = currentFont.italic(!resolved.isItalic)
+                    //                    let font: Font = container.font ?? .default
+                    //                    container.font = font.italic(!font.resolve(in: context).isItalic)
+                case .underline: container.underlineStyle = container.underlineStyle == .none ? .single : .none
+                case .strikethrough: container.strikethroughStyle = container.strikethroughStyle == .none ? .single : .none
+                case .leftAlign: container.alignment = container.alignment == .left ? .right : .left
+                case .rightAlign: container.alignment = container.alignment == .right ? .left : .right
+                case .centerAlign: container.alignment = container.alignment == .center ? .left : .center
+                case .extraLarge:
+                    // Toggle behavior: if we're already at title size, go back to body size; otherwise set to title size
+                    container.font = container.font == .title ? .body : .title
+                    restoreBoldandItalic()
+                case .large:
+                    container.font = container.font == .title2 ? .body : .title2
+                    restoreBoldandItalic()
+                case .medium:
+                    container.font = container.font == .title3 ? .body : .title3
+                    restoreBoldandItalic()
+                case .body:
+                    container.font = .body
+                    restoreBoldandItalic()
+                case .footnote:
+                    container.font = container.font == .footnote ? .body : .footnote
+                    restoreBoldandItalic()
+                }
+                func restoreBoldandItalic() {
+                    // Preserve resolved traits (bold/italic) when constructing the new font
+                    container.font = (container.font ?? .default).bold(resolved.isBold)
+                    container.font = (container.font ?? .default).italic(resolved.isItalic)
+                }
             }
         }
-    }
-
-    /// Update the Toggle States dictionary based on the attributes in the current selection. (whether a range or an insertion point)
-    func updateToggleStates() {
-        let attributes = selection.attributes(in: text)
-        let alignments = Array(attributes[\.alignment])
-        for toggle in ToolbarToggle.allCases {
-            toggleStates[toggle] = switch toggle {
-            case .bold:
-                attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).isBold }
-            case .italic:
-                attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).isItalic }
-            case .underline:
-                attributes[\.underlineStyle].allSatisfy { $0 == .single }
-            case .strikethrough:
-                attributes[\.strikethroughStyle].allSatisfy { $0 != .none }
-            case .leftAlign:
-                alignments.allSatisfy { $0 == .left } || alignments.isEmpty
-            case .rightAlign: alignments.allSatisfy { $0 == .right }
-            case .centerAlign:
-                alignments.allSatisfy { $0 == .center }
-            case .extraLarge:
-                /// The line below will not work if the font has had other formatting styles applied, e.g Bold/Italic
-                ///  `attributes[\.font].allSatisfy({$0 == .title })`
-                attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == titlePointSize }
-            case .large:
-                attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == title2PointSize }
-            case .medium:
-                attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == title3PointSize }
-            case .body:
-                attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == bodyPointSize }
-            case .footnote:
-                attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == footnotePointSize }
+        
+        /// Update the Toggle States dictionary based on the attributes in the current selection. (whether a range or an insertion point)
+        func updateToggleStates() {
+            let attributes = selection.attributes(in: text)
+            let alignments = Array(attributes[\.alignment])
+            for toggle in ToolbarToggle.allCases {
+                toggleStates[toggle] = switch toggle {
+                case .bold:
+                    attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).isBold }
+                case .italic:
+                    attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).isItalic }
+                case .underline:
+                    attributes[\.underlineStyle].allSatisfy { $0 == .single }
+                case .strikethrough:
+                    attributes[\.strikethroughStyle].allSatisfy { $0 != .none }
+                case .leftAlign:
+                    alignments.allSatisfy { $0 == .left } || alignments.isEmpty
+                case .rightAlign: alignments.allSatisfy { $0 == .right }
+                case .centerAlign:
+                    alignments.allSatisfy { $0 == .center }
+                case .extraLarge:
+                    /// The line below will not work if the font has had other formatting styles applied, e.g Bold/Italic
+                    ///  `attributes[\.font].allSatisfy({$0 == .title })`
+                    attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == titlePointSize }
+                case .large:
+                    attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == title2PointSize }
+                case .medium:
+                    attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == title3PointSize }
+                case .body:
+                    attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == bodyPointSize }
+                case .footnote:
+                    attributes[\.font].allSatisfy { ($0 ?? .default).resolve(in: context).pointSize == footnotePointSize }
+                }
             }
         }
     }

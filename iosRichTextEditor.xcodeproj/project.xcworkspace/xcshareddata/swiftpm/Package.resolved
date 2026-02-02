@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/disc0infern0/TextColorPicker",
       "state" : {
-        "revision" : "e9a1814106f71a969a08ce168cb6e7a55c616bd2",
-        "version" : "0.0.6"
+        "revision" : "88a3129439a11e63c87fd6072877c3c8ee112476",
+        "version" : "0.1.5"
       }
     }
   ],
